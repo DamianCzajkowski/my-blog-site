@@ -1,0 +1,62 @@
+{% extends 'base.html' %} {% load static %} {% block navbar %}
+<div class="collapse navbar-collapse" id="navbarResponsive">
+  <ul class="navbar-nav ml-auto">
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'index' %}"
+        >Home
+        <span class="sr-only">(current)</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'blog' %}">Blog Entries</a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+    </li>
+    {% else %}
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'login' %}">Login</a>
+    </li>
+    {% endif %}
+  </ul>
+</div>
+{% endblock navbar %}{% block banner %}
+<div class="heading-page header-text">
+  <section class="page-heading">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="text-content"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock banner %} {% block content %}
+<section class="contact-us">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="down-contact">
+          <div class="row">
+            <div class="col-lg-8">
+              <div class="sidebar-item contact-form">
+                <div class="sidebar-heading">
+                  <h2>Create a new post</h2>
+                </div>
+                <div class="content">
+                  <form method="post" enctype="multipart/form-data">
+                    {{ form.as_p }} {% csrf_token %}
+                    <button type="submit">Submit</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}

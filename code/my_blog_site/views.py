@@ -57,7 +57,7 @@ def add_post(request):
             post.user_id = request.user
             post.save()
             form.save_m2m()
-            return HttpResponseRedirect(reverse("post-details"), args=(post.id))
+            return HttpResponseRedirect(reverse("post-details", args=(post.id,)))
 
     return render(request, "add_post.html", {"form": form})
 

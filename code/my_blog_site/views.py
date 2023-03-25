@@ -14,6 +14,7 @@ def index(request):
         .prefetch_related("tags")
         .select_related("user_id")
         .filter(is_public=True)
+        .order_by("-created_at")
         .annotate(Count("comments"))[:3]
     )
 
@@ -64,6 +65,7 @@ def blog(request, page=1):
         .prefetch_related("tags")
         .select_related("user_id")
         .annotate(Count("comments"))
+        .order_by("-created_at")
     )
     if tag_id:
         posts = posts.filter(tags__id__exact=tag_id)
@@ -72,7 +74,7 @@ def blog(request, page=1):
 
     categories = Category.objects.all()
     tags = Tag.objects.all()
-    paginator = Paginator(posts, 5)
+    paginator = Paginator(posts, 4)
     page_obj = paginator.get_page(page)
     return render(
         request,

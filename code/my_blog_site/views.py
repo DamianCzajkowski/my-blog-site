@@ -13,19 +13,21 @@ def index(request):
         Post.objects.all()
         .prefetch_related("tags")
         .select_related("user_id")
-        .filter(is_public=True)
         .order_by("-created_at")
-        .annotate(Count("comments"))[:3]
+        .annotate(Count("comments"))
     )
-
+    if not request.user.is_authenticated:
+        posts = posts.filter(is_public=True)
     categories = Category.objects.all()
     tags = Tag.objects.all()
     return render(
-        request, "index.html", {"posts": posts, "categories": categories, "tags": tags}
+        request,
+        "index.html",
+        {"posts": posts[:4], "categories": categories, "tags": tags},
     )
 
 
-def search_posts(request):
+def search_post(request):
     query = request.GET.get("q")
     posts = (
         Post.objects.all()
@@ -34,10 +36,13 @@ def search_posts(request):
         .annotate(Count("comments"))
         .filter(title__icontains=query)
     )
+    print(posts)
     categories = Category.objects.all()
     tags = Tag.objects.all()
     return render(
-        request, "blog.html", {"posts": posts, "categories": categories, "tags": tags}
+        request,
+        "blog.html",
+        {"page_obj": posts, "categories": categories, "tags": tags},
     )
 
 
@@ -71,7 +76,8 @@ def blog(request, page=1):
         posts = posts.filter(tags__id__exact=tag_id)
     if category_id:
         posts = posts.filter(category__id__exact=category_id)
-
+    if not request.user.is_authenticated:
+        posts = posts.filter(is_public=True)
     categories = Category.objects.all()
     tags = Tag.objects.all()
     paginator = Paginator(posts, 4)

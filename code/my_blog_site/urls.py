@@ -22,12 +22,12 @@ from apps.user import views as user_views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.index, name="index"),
+    path("blog/search/", views.search_post, name="search_posts"),
     re_path(r"^blog/(?:(?P<page>\w+)/)?$", views.blog, name="blog"),
     path("post-details/<int:post_id>/", views.post_details, name="post-details"),
     path(
         "post-details/<int:post_id>/add_comment", views.add_comment, name="add-comment"
     ),
-    path("blog/search/", views.search_posts, name="search_posts"),
     path("post/add/", views.add_post, name="add-post"),
     path("login/", user_views.login_page, name="login"),
     path("logout/", user_views.logout_user, name="logout"),
